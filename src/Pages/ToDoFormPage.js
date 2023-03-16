@@ -3,10 +3,9 @@ import { useState } from 'react';
 import { useNavigate  } from 'react-router-dom';
 
 
-
 const ToDoFormPage = (props) => {
 
-	const { endpointUrl } = props;
+	const { urlEndPoint } = props;
     const [title, setTitle] = useState("")
 	const [description, setDescription] = useState("")
 	const [priority, setPriority] = useState("")
@@ -15,11 +14,15 @@ const ToDoFormPage = (props) => {
 	const navigate = useNavigate();
 
     const handleCreateToDo = async () => {
-        axios.post(`${endpointUrl}`, {
+        axios.post(`${urlEndPoint}/todos`, {
             title: title,
             description: description,
             priority: priority
-          })
+          }, {
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		  })
           .then(function (response) {
             console.log(response);
           })
@@ -27,7 +30,6 @@ const ToDoFormPage = (props) => {
             console.log(error);
           });
     }
-
 
     return (
 		<div>

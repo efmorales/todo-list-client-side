@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 import { useState, useEffect } from 'react';
@@ -8,6 +7,8 @@ import ToDoFormPage from './Pages/ToDoFormPage';
 import Layout from './Layouts/Layout';
 import axios from 'axios';
 
+
+//call endpoint from .env file
 const urlEndPoint = process.env.REACT_APP_URL_ENDPOINT;
 
 function App() {  

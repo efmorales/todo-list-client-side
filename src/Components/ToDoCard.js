@@ -1,19 +1,61 @@
 import { useState } from "react";
 
+import axios from "axios";
+
+//call endpoint from .env file
+const urlEndPoint = process.env.REACT_APP_URL_ENDPOINT;
+
 // todo card 
 const ToDoCard = (props) => {
 
-    const { toDo  } = props;
+    const { toDo, setToDoList  } = props;
     const [title, setTitle] = useState(toDo.title);
     const [priority, setPriority] = useState(toDo.priority);
     const [description, setDescription] = useState(toDo.descrption);
     const [isEditing, setIsEditing] = useState(false);
 
     //implement handlers 
-    const handleSetToDoComplete = () => {}
-    const handleDeleteToDo = () => {}
-    const handleUpdateToDo = () => {}
+    const handleSetToDoComplete = () => {
+      const updatedToDo = { ...toDo, isComplete: !toDo.isComplete };
+      axios
+        .put(`${urlEndPoint}/todos/update/${toDo.id}`, updatedToDo)
+        .then((response) => {
+          console.log(response);
+          setToDoList((prevToDoList) =>
+            prevToDoList.map((item) => (item.id === toDo.id ? updatedToDo : item))
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
 
+    const handleDeleteToDo = () => {
+      axios
+        .delete(`${urlEndPoint}/todos/delete/${toDo.id}`)
+        .then((response) => {
+          console.log(response);
+          setToDoList((prevToDoList) => prevToDoList.filter((item) => item.id !== toDo.id));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    const handleUpdateToDo = () => {
+    const updatedToDo = { ...toDo, title, priority, description };
+    axios
+      .put(`${urlEndPoint}/todos/update/${toDo.id}`, updatedToDo)
+      .then((response) => {
+        console.log(response);
+        setToDoList((prevToDoList) =>
+          prevToDoList.map((item) => (item.id === toDo.id ? updatedToDo : item))
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
     return (
         <div>
           {!isEditing && <h2>{toDo.title}</h2>}
@@ -54,12 +96,12 @@ const ToDoCard = (props) => {
               <option>Low</option>
             </select>
           )}
-          <p>Is Complete: {toDo.isComplete ? "Complete" : "Incomplete"}</p>
+          {/* <p>Is Complete: {toDo.isComplete ? "Complete" : "Incomplete"}</p>
           <p>Creation Date: {toDo.creationDate.toString()}</p>
           <p>Last Modified: {toDo.lastModified.toString()}</p>
           <p>
             Completed Date: {toDo.completedDate && toDo.completedDate.toString()}
-          </p>
+          </p> */}
           <button
             onClick={() => {
               handleSetToDoComplete();
